@@ -26,12 +26,10 @@ function Auth() {
                 </ul>
 
             </nav>
-            <div className="container">
                 <Routes>
                     <Route path="/" element={<Home />} />
                     <Route path="/dashboard" element={<Dashboard />} />
                 </Routes>
-            </div>
         </>
     );
 }
