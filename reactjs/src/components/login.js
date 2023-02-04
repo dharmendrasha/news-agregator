@@ -14,25 +14,45 @@ export default function Login() {
     }
 
     return(
-        <div className="row justify-content-center pt-5">
-            <div className="col-sm-6">
-                <div className="card p-4">
-                    <h1 className="text-center mb-3">Login </h1>
-                    <div className="form-group">
-                        <label>Email address:</label>
-                        <input type="email" className="form-control" placeholder="Enter email"
-                            onChange={e=>setEmail(e.target.value)}
-                        id="email" />
-                    </div>
-                    <div className="form-group mt-3">
-                        <label>Password:</label>
-                        <input type="password" className="form-control" placeholder="Enter password"
-                            onChange={e => setPassword(e.target.value)}
-                        id="pwd" />
-                    </div>
-                    <button type="button" onClick={submitForm} className="btn btn-primary mt-4">Login</button>
+        <form>
+            <div className="login-inner">
+                <h3>Sign In</h3>
+
+                <div className="mb-3">
+                <label>Email address</label>
+                <input type="email" className="form-control" placeholder="Enter email"
+                    onChange={e=>setEmail(e.target.value)} id="email" />
                 </div>
+
+                <div className="mb-3">
+                <label>Password</label>
+                <input type="password" className="form-control" placeholder="Enter password"
+                    onChange={e => setPassword(e.target.value)}
+                    id="pwd" />
+                </div>
+
+                <div className="mb-3">
+                <div className="custom-control custom-checkbox">
+                    <input
+                    type="checkbox"
+                    className="custom-control-input"
+                    id="customCheck1"
+                    />
+                    <label className="custom-control-label ml-1" htmlFor="customCheck1">
+                    Remember me
+                    </label>
+                </div>
+                </div>
+
+                <div className="d-grid">
+                <button type="submit" className="btn btn-primary" onClick={submitForm}>
+                    Submit
+                </button>
+                </div>
+                <p className="forgot-password text-right">
+                Forgot <a href="#">password?</a>
+                </p>
             </div>
-        </div>
+         </form>
     )
 }
