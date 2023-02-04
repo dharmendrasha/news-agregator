@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\NewsController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,6 +17,18 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::prefix('v1')->group(function () {
+
     Route::get('news', [NewsController::class, 'getNews']);
+
     Route::get('top_news', [NewsController::class, 'getTopHeadLines']);
+
+    Route::prefix('auth')->group(function () {
+        Route::post('register', [AuthController::class, 'register']);
+        Route::post('login', [AuthController::class, 'login']);
+    });
+
+    Route::prefix('user')->middleware('jwt')->group(function () {
+        Route::get('/', [UserController::class, 'profile']);
+    });
+
 });
