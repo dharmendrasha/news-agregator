@@ -22,9 +22,7 @@ function Auth() {
                     <li className="nav-item">
                         <span role="button" className="nav-link" onClick={logoutUser}>Logout</span>
                     </li>
-
                 </ul>
-
             </nav>
                 <Routes>
                     <Route path="/" element={<Home />} />
