@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::prefix('v1')->group(function () {
+Route::prefix('v1')->middleware('sanctum-optional')->group(function () {
 
     Route::get('news', [NewsController::class, 'getNews']);
 
@@ -27,8 +27,9 @@ Route::prefix('v1')->group(function () {
         Route::post('login', [AuthController::class, 'login']);
     });
 
-    Route::prefix('user')->middleware('jwt')->group(function () {
+    Route::prefix('user')->middleware('auth:sanctum')->group(function () {
         Route::get('/', [UserController::class, 'profile']);
+        Route::post('/', [UserController::class, 'feed']);
     });
 
 });

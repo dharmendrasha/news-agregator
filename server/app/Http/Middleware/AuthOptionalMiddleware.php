@@ -2,13 +2,12 @@
 
 namespace App\Http\Middleware;
 
-use App\Helper\ResponseBody;
-use App\Http\Controllers\AuthController;
 use App\Models\User;
 use Closure;
 use Illuminate\Http\Request;
+use Laravel\Sanctum\PersonalAccessToken;
 
-class AuthMiddleware
+class AuthOptionalMiddleware
 {
     /**
      * Handle an incoming request.
@@ -20,20 +19,17 @@ class AuthMiddleware
     public function handle(Request $request, Closure $next)
     {
         try{
+
             $authorization = $request->bearerToken();
             if (empty($authorization)) {
                 throw new \Exception('authorization header is required.');
             }
 
+            $authToken = PersonalAccessToken::findToken($authorization);
 
-            // confirm it
+            $user = User::where('id', $authToken->tokenable_id)->first();
 
-            $auth = new AuthController();
-            $token = $auth->decodeJwt($authorization);
-
-            $user = User::where('email', $token->email)->first();
-
-            if(!$user){
+            if (!$user) {
                 throw new \Exception('User did not found.');
             }
 
@@ -43,13 +39,9 @@ class AuthMiddleware
                 return $user;
             });
 
-
-            return $next($request);
-
-        }catch(\Exception $ex){
-            return response()->json(new ResponseBody([], $ex->getMessage(), true), 401);
-        }
+        }catch(\Exception $ex){}
 
 
+        return $next($request);
     }
 }

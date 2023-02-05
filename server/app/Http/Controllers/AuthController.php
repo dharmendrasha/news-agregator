@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Firebase\JWT\Key;
 use Firebase\JWT\JWT;
+use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
@@ -43,22 +44,15 @@ class AuthController extends Controller
     public function login(UserLoginRequest $req){
         try{
 
+            if (!Auth::attempt($req->only('email', 'password'))) {
+                throw new \Exception('Login information is invalid.');
+            }
+
             $user = User::where('email', $req->get('email'))->first();
 
-            if(!$user){
-                throw new \Exception('User did not found with this email address.');
-            }
+            $token = $user->createToken('authToken')->plainTextToken;
 
-            $passwordConfirm = Hash::check($req->get('password'), $user->password);
-
-            if(!$passwordConfirm){
-                throw new \Exception('Invalid user password please check and try again. there is no reset ot for forgot password mechanism here. You are on your own.');
-            }
-
-            $jwt = $this->encodeJwt(['name' => $user->name, 'email' => $user->email]);
-
-            return response()->json(new ResponseBody(['jwt' => $jwt], 'User logged in successfully'));
-
+            return response()->json(new ResponseBody(['jwt' => $token], 'User logged in successfully'));
 
         }catch(\Exception $ex){
             return response()->json(new ResponseBody([], $ex->getMessage(), true));
@@ -67,15 +61,15 @@ class AuthController extends Controller
 
     public function register(UserRequest $req){
         try{
+
             DB::beginTransaction();
             $u = $req->only(['name', 'email', 'password']);
             $user = new User($u);
             $user->password = Hash::make($user->password);
-            $user = $user->save();
-            $jwt = $this->encodeJwt($req->only(['name', 'email']));
+            $user->save();
             DB::commit();
-
-            return response()->json(new ResponseBody(['jwt' => $jwt], 'User registered successfully'));
+            $token = $user->createToken('authToken')->plainTextToken;
+            return response()->json(new ResponseBody(['jwt' => $token], 'User registered successfully'));
 
         }catch(\Exception $ex){
             DB::rollBack();
