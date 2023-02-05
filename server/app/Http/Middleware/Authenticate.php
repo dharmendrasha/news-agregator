@@ -2,7 +2,9 @@
 
 namespace App\Http\Middleware;
 
+use App\Helper\ResponseBody;
 use Illuminate\Auth\Middleware\Authenticate as Middleware;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class Authenticate extends Middleware
 {
@@ -14,8 +16,11 @@ class Authenticate extends Middleware
      */
     protected function redirectTo($request)
     {
-        if (! $request->expectsJson()) {
-            return route('login');
+        if($request->expectsJson()){
+            throw new HttpResponseException(response()->json(new ResponseBody([], 'User is unauthenticated.', true), 401));
         }
+
+        return route('login');
+
     }
 }

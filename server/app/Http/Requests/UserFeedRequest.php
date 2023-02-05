@@ -4,8 +4,10 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class NewsRequest extends FormRequest
+class UserFeedRequest extends FormRequest
 {
+    use ApiTrait;
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -24,13 +26,9 @@ class NewsRequest extends FormRequest
     public function rules()
     {
         return [
-            'q' => 'nullable|string',
-            'date' => 'nullable|string|date_format:yyyy-mm-dd',
-            'category' => 'nullable|string',
-            'sources' => 'nullable|string',
-            'pageSize' => 'nullable|numeric|max:100',
-            'page' => 'nullable|numeric',
-            'personalize' => 'nullable'
+            'source' => 'string|nullable',
+            'category' => 'string|nullable',
+            'author' => 'string|nullable'
         ];
     }
 }
