@@ -1,4 +1,4 @@
-// import "../styles/home.scss";
+import "../styles/home.css";
 
 export default function Home() {
   return (
@@ -18,7 +18,7 @@ export default function Home() {
               </h1>
               <div class='postcard__subtitle small'>
                 <time datetime='2020-05-25 12:00:00'>
-                  <i class='fas fa-calendar-alt mr-2'></i>Mon, May 25th 2020
+                  Mon, May 25th 2020
                 </time>
               </div>
               <div class='postcard__bar'></div>
@@ -53,7 +53,7 @@ export default function Home() {
               </h1>
               <div class='postcard__subtitle small'>
                 <time datetime='2020-05-25 12:00:00'>
-                  <i class='fas fa-calendar-alt mr-2'></i>Mon, May 25th 2020
+                  Mon, May 25th 2020
                 </time>
               </div>
               <div class='postcard__bar'></div>
@@ -88,7 +88,7 @@ export default function Home() {
               </h1>
               <div class='postcard__subtitle small'>
                 <time datetime='2020-05-25 12:00:00'>
-                  <i class='fas fa-calendar-alt mr-2'></i>Mon, May 25th 2020
+                  Mon, May 25th 2020
                 </time>
               </div>
               <div class='postcard__bar'></div>
@@ -123,7 +123,7 @@ export default function Home() {
               </h1>
               <div class='postcard__subtitle small'>
                 <time datetime='2020-05-25 12:00:00'>
-                  <i class='fas fa-calendar-alt mr-2'></i>Mon, May 25th 2020
+                  Mon, May 25th 2020
                 </time>
               </div>
               <div class='postcard__bar'></div>
