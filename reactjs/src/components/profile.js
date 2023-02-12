@@ -54,6 +54,7 @@ export const PersonalizeFeed = ({
   const [language, setlanguage] = useState(default_language);
   const [country, setCountry] = useState(default_country);
   const [isLoading, setLoading] = useState(false);
+  const [isSaved, setSaved] = useState(false)
   const [availableSources, setAvailableSources] = useState([]);
   const [availableCategory, setAvailableCategory] = useState([]);
   const [availableLanguage, setAvailableLanguage] = useState([]);
@@ -79,6 +80,7 @@ export const PersonalizeFeed = ({
     postUpdateProfileFeed({ country, category, source, language })
       .then((v) => {
         setLoading(false);
+        setSaved(true);
       })
       .catch((e) => setLoading(false));
   };
@@ -103,15 +105,17 @@ export const PersonalizeFeed = ({
                   if (v.id === source) {
                     return (
                       <>
-                        <option selected value={v.id}>{v.name}</option>
+                        <option selected value={v.id}>
+                          {v.name}
+                        </option>
                       </>
                     );
                   }
-                    return (
-                      <>
-                        <option value={v.id}>{v.name}</option>
-                      </>
-                    );
+                  return (
+                    <>
+                      <option value={v.id}>{v.name}</option>
+                    </>
+                  );
                 })}
             </select>
           </div>
@@ -130,7 +134,11 @@ export const PersonalizeFeed = ({
               {Array.isArray(availableCategory) &&
                 availableCategory.map((v) => {
                   if (v === category) {
-                    return <option selected value={v}>{v}</option>;
+                    return (
+                      <option selected value={v}>
+                        {v}
+                      </option>
+                    );
                   }
                   return (
                     <>
@@ -155,13 +163,13 @@ export const PersonalizeFeed = ({
               <option selected>Please select language</option>
               {Array.isArray(availableLanguage) &&
                 availableLanguage.map((v) => {
-                   if (v === language) {
-                     return (
-                       <option selected value={v}>
-                         {v}
-                       </option>
-                     );
-                   }
+                  if (v === language) {
+                    return (
+                      <option selected value={v}>
+                        {v}
+                      </option>
+                    );
+                  }
                   return (
                     <>
                       <option value={v}>{v}</option>
@@ -211,6 +219,8 @@ export const PersonalizeFeed = ({
         >
           Update feed Settings
         </button>
+
+        {isSaved && <p>Settings has been successfully updated.</p>}
       </form>
     </>
   );
