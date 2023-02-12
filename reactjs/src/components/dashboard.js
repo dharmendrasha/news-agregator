@@ -1,38 +1,40 @@
 import { useEffect, useState } from 'react';
-import AuthUser from './AuthUser';
+import { getUserProfileApi } from '../utils/api-list';
 
 export default function Dashboard() {
-    const {http} = AuthUser();
-    const [userdetail,setUserdetail] = useState('');
+    const [userdetail,setUserdetail] = useState({});
+    const [isLoading, setLoading] = useState(false)
 
     useEffect(()=>{
         fetchUserDetail();
     },[]);
 
-    const fetchUserDetail = () =>{
-        http.post('/me').then((res)=>{
-            setUserdetail(res.data);
-        });
-    }
-
-    function renderElement(){
-        if(userdetail){
-            return <div>
-                <h4>Name</h4>
-                <p>{userdetail.name}</p>
-                <h4>Email</h4>
-                <p>{userdetail.email}</p>
-            </div>
-        }else{
-            return <p>Loading.....</p>
-        }
-
+    const fetchUserDetail = () => {
+        setLoading(true)
+        getUserProfileApi().then(res => {
+            setUserdetail(res.data)
+            setLoading(false)
+        }).catch(e => {
+            setLoading(false)
+        })
     }
 
     return(
         <div>
             <h1 className='mb-4 mt-4'>Dashboard page</h1>
-            { renderElement() }
+            {!isLoading && <UserProfile {...userdetail} />}
         </div>
     )
+}
+
+
+function UserProfile({name, email}) {
+        return (
+          <div>
+            <h4>Name</h4>
+            <p>{name}</p>
+            <h4>Email</h4>
+            <p>{email}</p>
+          </div>
+        );
 }

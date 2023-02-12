@@ -1,15 +1,17 @@
-import axios from 'axios';
+import { api } from '../utils/api.utils'
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+
+export const getToken = () => {
+    const tokenString = sessionStorage.getItem("token");
+    const userToken = JSON.parse(tokenString);
+    return userToken;
+};
 
 export default function AuthUser(){
     const navigate = useNavigate();
 
-    const getToken = () =>{
-        const tokenString = sessionStorage.getItem('token');
-        const userToken = JSON.parse(tokenString);
-        return userToken;
-    }
+
 
     const getUser = () =>{
         const userString = sessionStorage.getItem('user');
@@ -28,7 +30,6 @@ export default function AuthUser(){
 
         setToken(token);
         setUser(user);
-        navigate('/dashboard');
     }
 
     const logout = () => {
@@ -36,13 +37,7 @@ export default function AuthUser(){
         navigate('/login');
     }
 
-    const http = axios.create({
-        baseURL:"http://localhost:8000/api",
-        headers:{
-            "Content-type" : "application/json",
-            "Authorization" : `Bearer ${token}`
-        }
-    });
+    const http = api()
     return {
         setToken:saveToken,
         token,

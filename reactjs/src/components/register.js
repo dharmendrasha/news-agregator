@@ -1,19 +1,30 @@
 import { useState } from "react"
 import { useNavigate } from 'react-router-dom';
 import AuthUser from './AuthUser';
+import { postUserRegisterApi } from "../utils/api-list";
 
 export default function Register() {
     const navigate = useNavigate();
-    const {http,setToken} = AuthUser();
+    const {setToken} = AuthUser();
     const [name,setName] = useState();
     const [email,setEmail] = useState();
     const [password,setPassword] = useState();
+    const [isLoading, setLoading] = useState(false)
 
     const submitForm = () =>{
         // api call
-        http.post('/register',{email:email,password:password,name:name}).then((res)=>{
-            navigate('/login')
-        })
+        setLoading(true)
+        postUserRegisterApi({ name, email, password }).then(res => {
+            setLoading(false)
+            setToken({name, email}, res.data.jwt)
+            navigate('/')
+        }).catch(e => {
+            setLoading(false)
+            alert('Unable to register please try with another email address.')
+        });
+        // http.post('/register',{email:email,password:password,name:name}).then((res)=>{
+        //     navigate('/login')
+        // })
     }
 
     return(
@@ -38,7 +49,7 @@ export default function Register() {
                     onChange={e => setPassword(e.target.value)}
                 id="pwd" />
             </div>
-            <button type="button" onClick={submitForm} className="btn btn-primary mt-4">Register</button>
+            <button type="button" disabled={isLoading} onClick={submitForm} className="btn btn-primary mt-4">Register</button>
         </div>
     )
 }

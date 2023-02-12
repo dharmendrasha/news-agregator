@@ -1,16 +1,26 @@
 import { useState } from "react"
 import AuthUser from './AuthUser';
+import { useNavigate } from "react-router-dom";
+import { postUserLoginApi } from "../utils/api-list";
 
 export default function Login() {
-    const {http,setToken} = AuthUser();
+    const { setToken } = AuthUser();
+    const navigate = useNavigate();
     const [email,setEmail] = useState();
     const [password,setPassword] = useState();
+    const [isLoading, setLoading] = useState(false)
 
     const submitForm = () =>{
-        // api call
-        http.post('/login',{email:email,password:password}).then((res)=>{
-            setToken(res.data.user,res.data.access_token);
+        setLoading(true)
+        postUserLoginApi({ email, password }).then(res => {
+            setLoading(false)
+            setToken({ email }, res.data.jwt);
+            navigate('/')
+        }).catch(e => {
+            setLoading(false)
+            alert("Unable to login please try with another email address.");
         })
+        
     }
 
     return(
@@ -31,27 +41,14 @@ export default function Login() {
                     id="pwd" />
                 </div>
 
-                <div className="mb-3">
-                <div className="custom-control custom-checkbox">
-                    <input
-                    type="checkbox"
-                    className="custom-control-input"
-                    id="customCheck1"
-                    />
-                    <label className="custom-control-label ml-1" htmlFor="customCheck1">
-                    Remember me
-                    </label>
-                </div>
-                </div>
+                
 
                 <div className="d-grid">
-                <button type="submit" className="btn btn-primary" onClick={submitForm}>
+                <button type="submit" className="btn btn-primary" onClick={submitForm} disabled={isLoading}>
                     Submit
                 </button>
                 </div>
-                <p className="forgot-password text-right">
-                Forgot <a href="#">password?</a>
-                </p>
+               
             </div>
          </form>
     )
