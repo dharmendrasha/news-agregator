@@ -28,7 +28,8 @@ class UserFeedRequest extends FormRequest
         return [
             'source' => 'string|nullable',
             'category' => 'string|nullable',
-            'author' => 'string|nullable'
+            'language' => 'string|nullable',
+            'country' => 'string|nullable',
         ];
     }
 }

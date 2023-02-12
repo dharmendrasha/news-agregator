@@ -15,7 +15,8 @@ class UserFeedModel extends Model
         'user_id',
         'default_source',
         'default_category',
-        'default_author',
+        'default_language',
+        'default_country',
     ];
 
     public function user(){
