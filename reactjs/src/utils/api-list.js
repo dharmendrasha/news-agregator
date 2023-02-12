@@ -42,3 +42,9 @@ export const getUserProfileApi = async () => {
 export const postUpdateProfileFeed = async (data = {}) => {
     return await tryCatch(async () => await api().post('user', data))
 }
+
+
+export const getAvailableNewsOptions = async () => {
+  return await tryCatch(async () => await api().get("available-news-options"));
+}
+
