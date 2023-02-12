@@ -38,15 +38,23 @@ class NewsApiModule extends NewsModule
         return new News($data['totalResults'], $article);
     }
 
-    public function getTopHeadLines(array $query = []){
-        try{
-            $topHeadLines = Http::withMiddleware($this->midddleware('top-headlines', $query))->baseUrl($this->endPoint);
+    private function fetchNews(array $q = [], string $title){
+        try {
+            $topHeadLines = Http::withMiddleware($this->midddleware($title, $q))->baseUrl($this->endPoint);
             $details = $topHeadLines->get('')->throw();
             return $this->__process($details->json());
-        }catch(\Exception $ex){
+        } catch (\Exception$ex) {
             Log::error($ex->getMessage(), $ex->getTrace());
             return new News();
         }
-
     }
+
+    public function getTopHeadLines(array $query = []){
+        return $this->fetchNews($query, 'top-headlines');
+    }
+
+    public function getNews(array $query = []){
+        return $this->fetchNews($query, 'everything');
+    }
+
 }
