@@ -60,4 +60,15 @@ class NewsController extends Controller
         $top = new NewsApiModule();
         return response()->json($top->getNews($this->processRequest($req)));
     }
+
+
+    public function getSources(){
+        $top = new NewsApiModule();
+        $data['sources'] = $top->getSources();
+        $data['language'] = config('news.language');
+        $data['category'] = config('news.categories');
+        $data['country'] = config('news.country');
+        return response()->json($data);
+    }
+
 }

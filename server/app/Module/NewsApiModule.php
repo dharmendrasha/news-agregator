@@ -57,4 +57,14 @@ class NewsApiModule extends NewsModule
         return $this->fetchNews($query, 'everything');
     }
 
+    public function getSources(){
+        try{
+            $getSources = Http::withMiddleware($this->midddleware('top-headlines/sources'))->baseUrl($this->endPoint);
+            $sources = $getSources->get('')->throw();
+            return $sources->json()['sources'];
+        }catch(\Exception $ex){
+            return [];
+        }
+    }
+
 }
