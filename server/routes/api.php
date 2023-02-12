@@ -22,6 +22,8 @@ Route::prefix('v1')->middleware('sanctum-optional')->group(function () {
 
     Route::get('top_news', [NewsController::class, 'getTopHeadLines']);
 
+    Route::get('available-news-options', [NewsController::class, 'getSources']);
+
     Route::prefix('auth')->group(function () {
         Route::post('register', [AuthController::class, 'register']);
         Route::post('login', [AuthController::class, 'login']);

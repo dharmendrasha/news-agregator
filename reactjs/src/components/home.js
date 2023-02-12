@@ -17,18 +17,6 @@ export default function Home() {
   const [totalNews, setTotalNews] = useState(0)
   const [results, setResults] = useState(0)
 
-  
-  const trackScrolling = () => {
-    const e = document.getElementById("page_read_news");
-    const bottom =
-      e.scrollHeight - e.scrollTop === e.clientHeight;
-
-    if (bottom) {
-      console.log("header bottom reached");
-      document.removeEventListener("scroll", trackScrolling);
-    }
-  };
-
   const loadMore = () => {
     loadPage(page+1)
   }
@@ -41,7 +29,7 @@ export default function Home() {
       if (d.articles.length === 0) {
         setIsEnd(true)
       }
-
+      
       const art = [...articles, ...d.articles]
       setArticles(art);
       setResults(art.length);
@@ -51,20 +39,14 @@ export default function Home() {
   }
 
   useEffect(() => {
-    document.addEventListener("scroll", trackScrolling);
     loadMore();
-
-    return () => {
-        document.removeEventListener("scroll", trackScrolling);
-    }
-
   }, [])
   
   return (
     <section className="light">
       <div className="container py-2" id="page_read_news" ref={ref}>
         <div className="h1 text-center text-dark" id="pageHeaderTitle">
-          Top news list
+          Top News
         </div>
         {Array.isArray(articles) &&
           articles.map((val, ind) => {

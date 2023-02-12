@@ -24,6 +24,8 @@ class UserController extends Controller
         $request['default_source'] = $req->get('source');
         $request['default_category'] = $req->get('category');
         $request['default_author'] = $req->get('author');
+        $request['default_country'] = $req->get('country');
+        $request['default_language'] = $req->get('language');
         $feed = UserFeedModel::updateOrCreate(['user_id' => $user->id], $request);
         return response()->json(new ResponseBody($feed, 'User feed saved.'));
     }

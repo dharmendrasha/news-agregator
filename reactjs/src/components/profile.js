@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
 import "../styles/profile.css";
-import { getUserProfileApi, postUpdateProfileFeed } from "../utils/api-list";
+import {
+  getUserProfileApi,
+  postUpdateProfileFeed,
+  getAvailableNewsOptions,
+} from "../utils/api-list";
 import { md5 } from "../utils/crypto.util";
 
 
@@ -42,82 +46,174 @@ export default function Profile() {
 export const PersonalizeFeed = ({
   default_source,
   default_category,
-  default_author,
+  default_language,
+  default_country,
 }) => {
-    const [author, setAuthor] = useState(default_author)
-    const [category, setCategory] = useState(default_category);
-    const [source, setSource] = useState(default_source);
-    const [isLoading, setLoading] = useState(false)
+  const [category, setCategory] = useState(default_category);
+  const [source, setSource] = useState(default_source);
+  const [language, setlanguage] = useState(default_language);
+  const [country, setCountry] = useState(default_country);
+  const [isLoading, setLoading] = useState(false);
+  const [availableSources, setAvailableSources] = useState([]);
+  const [availableCategory, setAvailableCategory] = useState([]);
+  const [availableLanguage, setAvailableLanguage] = useState([]);
+  const [availableCountry, setAvailableCountry] = useState([]);
 
-    const updateSettings = () => {
-        setLoading(true)
-        postUpdateProfileFeed({ author, category, source }).then((v) => {
-            setLoading(false)
+  useEffect(() => {
+    setLoading(true);
+    getAvailableNewsOptions()
+      .then((v) => {
+        setAvailableSources(v.sources);
+        setAvailableCategory(v.category);
+        setAvailableLanguage(v.language);
+        setAvailableCountry(v.country);
+        setLoading(false);
+      })
+      .catch((e) => {
+        setLoading(false);
+      });
+  }, []);
 
-        }).catch(e => setLoading(false))
-    }
+  const updateSettings = () => {
+    setLoading(true);
+    postUpdateProfileFeed({ country, category, source, language })
+      .then((v) => {
+        setLoading(false);
+      })
+      .catch((e) => setLoading(false));
+  };
 
-    return (
-      <>
-        <h5>Get Personalize news feed.</h5>
-        <form>
-          <div class="form-group">
-            <label for="inputSourced" class="col-sm-2 col-form-label">
-              Source
-            </label>
-            <div class="col-sm-10">
-              <input
-                type="text"
-                value={source}
-                class="form-control"
-                onChange={(e) => setSource(e.target.value)}
-                id="inputSourced"
-                placeholder="Source"
-              />
-            </div>
+  return (
+    <>
+      <h5>Get Personalize news feed.</h5>
+      <form>
+        <div class="form-group">
+          <label for="inputSourced" class="col-sm-2 col-form-label">
+            Source
+          </label>
+          <div class="col-sm-10">
+            <select
+              className="form-control"
+              id="inputSourced"
+              onChange={(e) => setSource(e.target.value)}
+            >
+              <option selected>Please select sources</option>
+              {Array.isArray(availableSources) &&
+                availableSources.map((v) => {
+                  if (v.id === source) {
+                    return (
+                      <>
+                        <option selected value={v.id}>{v.name}</option>
+                      </>
+                    );
+                  }
+                    return (
+                      <>
+                        <option value={v.id}>{v.name}</option>
+                      </>
+                    );
+                })}
+            </select>
           </div>
-          <div class="form-group">
-            <label for="inputCategory" class="col-sm-2 col-form-label">
-              Category
-            </label>
-            <div class="col-sm-10">
-              <input
-                type="text"
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
-                class="form-control"
-                id="inputCategory"
-                placeholder="Category"
-              />
-            </div>
+        </div>
+        <div class="form-group">
+          <label for="inputCategory" class="col-sm-2 col-form-label">
+            Category
+          </label>
+          <div class="col-sm-10">
+            <select
+              className="form-control"
+              id="inputCategory"
+              onChange={(e) => setCategory(e.target.value)}
+            >
+              <option selected>Please select Category</option>
+              {Array.isArray(availableCategory) &&
+                availableCategory.map((v) => {
+                  if (v === category) {
+                    return <option selected value={v}>{v}</option>;
+                  }
+                  return (
+                    <>
+                      <option value={v}>{v}</option>
+                    </>
+                  );
+                })}
+            </select>
           </div>
-          <div class="form-group">
-            <label for="inputAuthor" class="col-sm-2 col-form-label">
-              Author
-            </label>
-            <div class="col-sm-10">
-              <input
-                type="text"
-                value={author}
-                onChange={(e) => setAuthor(e.target.value)}
-                class="form-control"
-                id="inputAuthor"
-                placeholder="Author"
-              />
-            </div>
+        </div>
+
+        <div class="form-group">
+          <label for="inputLanguage" class="col-sm-2 col-form-label">
+            Language
+          </label>
+          <div class="col-sm-10">
+            <select
+              className="form-control"
+              id="inputLanguage"
+              onChange={(e) => setlanguage(e.target.value)}
+            >
+              <option selected>Please select language</option>
+              {Array.isArray(availableLanguage) &&
+                availableLanguage.map((v) => {
+                   if (v === language) {
+                     return (
+                       <option selected value={v}>
+                         {v}
+                       </option>
+                     );
+                   }
+                  return (
+                    <>
+                      <option value={v}>{v}</option>
+                    </>
+                  );
+                })}
+            </select>
           </div>
-          <br />
-          <button
-            type="button"
-            onClick={updateSettings}
-            disabled={isLoading}
-            className="btn btn-primary"
-          >
-            Update feed Settings
-          </button>
-        </form>
-      </>
-    );
+        </div>
+
+        <div class="form-group">
+          <label for="inputCountry" class="col-sm-2 col-form-label">
+            Country
+          </label>
+          <div class="col-sm-10">
+            <select
+              className="form-control"
+              id="inputCountry"
+              onChange={(e) => setCountry(e.target.value)}
+            >
+              <option selected>Please select Country</option>
+              {Array.isArray(availableCountry) &&
+                availableCountry.map((v) => {
+                  if (v === country) {
+                    return (
+                      <option selected value={v}>
+                        {v}
+                      </option>
+                    );
+                  }
+                  return (
+                    <>
+                      <option value={v}>{v}</option>
+                    </>
+                  );
+                })}
+            </select>
+          </div>
+        </div>
+
+        <br />
+        <button
+          type="button"
+          onClick={updateSettings}
+          disabled={isLoading}
+          className="btn btn-primary"
+        >
+          Update feed Settings
+        </button>
+      </form>
+    </>
+  );
 };
 
 export const ProfileDetails = ({email, name, feed}) => {
