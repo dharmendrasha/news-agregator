@@ -10,9 +10,10 @@ import { useRef } from "react";
 export default function Home() {
 
   const [isLoading, setLoading] = useState(true)
-  const [page, setPage] = useState(1)
+  const [page, setPage] = useState(0)
   const ref = useRef(null)
-  const [newsGet, newsSet] = useState({})
+  const [isEnd, setIsEnd] = useState(false)
+  const [articles, setArticles] = useState([])
   const [totalNews, setTotalNews] = useState(0)
   const [results, setResults] = useState(0)
 
@@ -28,20 +29,30 @@ export default function Home() {
     }
   };
 
+  const loadMore = () => {
+    loadPage(page+1)
+  }
 
-  const loadPage = (page = 1) => {
+  const loadPage = (p = 1) => {
     setLoading(true);
-    return getTopNewsApi().then((d) => {
-      newsSet(d);
-      setResults(d.results ?? 0);
-      setTotalNews(d.total ?? 0);
+    setPage(p)
+    return getTopNewsApi(p).then((d) => {
+
+      if (d.articles.length === 0) {
+        setIsEnd(true)
+      }
+
+      const art = [...articles, ...d.articles]
+      setArticles(art);
+      setResults(art.length);
+      setTotalNews(Number(d.total ?? 0) - articles.length);
       setLoading(false);
     });
   }
 
   useEffect(() => {
     document.addEventListener("scroll", trackScrolling);
-    loadPage()
+    loadMore();
 
     return () => {
         document.removeEventListener("scroll", trackScrolling);
@@ -53,16 +64,25 @@ export default function Home() {
     <section className="light">
       <div className="container py-2" id="page_read_news" ref={ref}>
         <div className="h1 text-center text-dark" id="pageHeaderTitle">
-          Top news list - {totalNews} - {results}
+          Top news list
         </div>
-
-        {!isLoading &&
-          Array.isArray(newsGet.articles) &&
-          newsGet.articles.map((val, ind) => {
+        {Array.isArray(articles) &&
+          articles.map((val, ind) => {
             return <ArticleComponent key={ind} {...val} />;
           })}
+
+        {!isEnd && (
+          <button
+            type="button"
+            disabled={isLoading}
+            onClick={loadMore}
+            className="btn btn-primary left"
+          >
+            Load More...
+          </button>
+        )}
+        {isEnd && (<p>You have reached to the end.</p>)}
       </div>
-      <a>visible</a>
     </section>
   );
 }
@@ -72,7 +92,7 @@ export const ArticleComponent = ({author, content, description, image, published
   return (
     <>
       <article className="postcard light blue">
-        <a className="postcard__img_link" href="#">
+        <a className="postcard__img_link" target="_blank" href={url}>
           <img className="postcard__img" src={image} alt="Image Title" />
         </a>
         <div className="postcard__text t-dark">
@@ -82,13 +102,15 @@ export const ArticleComponent = ({author, content, description, image, published
             </a>
           </h1>
           <div className="postcard__subtitle small">
-            <time dateTime="2020-05-25 12:00:00">
+            <time dateTime={publishedAt}>
               {new Date(publishedAt).toDateString()}
             </time>
           </div>
           <div className="postcard__bar"></div>
           <div className="postcard__preview-txt">{content}</div>
-          {author && (<>author : {author}</>)}
+          {author && <>Author : {author}</>}
+          <br/>
+          {source && source.source && <>Source : {source.source}</>}
         </div>
       </article>
     </>

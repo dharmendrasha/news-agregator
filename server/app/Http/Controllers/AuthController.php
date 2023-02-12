@@ -6,6 +6,7 @@ use App\Helper\ResponseBody;
 use App\Http\Requests\UserLoginRequest;
 use App\Http\Requests\UserRequest;
 use App\Models\User;
+use App\Models\UserFeedModel;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Firebase\JWT\Key;
@@ -59,6 +60,20 @@ class AuthController extends Controller
         }
     }
 
+    private function createUserFeed(User $user){
+        try{
+            DB::beginTransaction();
+            $feed = new UserFeedModel();
+            $feed->user_id = $user->id;
+            $feed->save();
+            DB::commit();
+            return $feed;
+        }catch(\Exception $ex){
+            DB::rollBack();
+            return null;
+        }
+    }
+
     public function register(UserRequest $req){
         try{
 
@@ -68,6 +83,11 @@ class AuthController extends Controller
             $user->password = Hash::make($user->password);
             $user->save();
             DB::commit();
+
+            // also create default feed
+            $this->createUserFeed($user);
+
+
             $token = $user->createToken('authToken')->plainTextToken;
             return response()->json(new ResponseBody(['jwt' => $token], 'User registered successfully'));
 

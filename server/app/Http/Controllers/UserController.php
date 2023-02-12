@@ -10,7 +10,11 @@ use Illuminate\Http\Request;
 class UserController extends Controller
 {
     public function profile(Request $req){
-        return response()->json(new ResponseBody($req->user(), 'User profile'));
+        $user = $req->user();
+        $feed = $user->feed()->first();
+        $user->feed = $feed;
+        // dd($feed);
+        return response()->json(new ResponseBody($user, 'User profile'));
     }
 
     public function feed(UserFeedRequest $req){
