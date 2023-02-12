@@ -50,7 +50,7 @@ export default function Home() {
   }, [])
   
   return (
-    <section className="light">
+    <section>
       <div className="container py-2" id="page_read_news" ref={ref}>
         <div className="h1 text-center text-dark" id="pageHeaderTitle">
           Top news list - {totalNews} - {results}
@@ -62,7 +62,6 @@ export default function Home() {
             return <ArticleComponent key={ind} {...val} />;
           })}
       </div>
-      <a>visible</a>
     </section>
   );
 }
