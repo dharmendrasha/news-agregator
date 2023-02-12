@@ -3,13 +3,14 @@ import Home from '../components/home';
 import Login from '../components/login';
 import Register from '../components/register';
 import '../styles/nav-bar.css'
+import Search from '../components/search';
+import { SearchComponent } from './auth'
 
 function Guest() {
     return (
       <>
         <nav className="navbar navbar-expand-sm navbar-dark bg-dark">
           <div className="container-fluid">
-            
             <button
               className="navbar-toggler"
               type="button"
@@ -42,23 +43,14 @@ function Guest() {
                   </Link>
                 </li>
               </ul>
-              <form className="d-flex">
-                <input
-                  className="form-control me-2"
-                  type="search"
-                  placeholder="Search"
-                  aria-label="Search"
-                />
-                <button className="btn btn-outline-success" type="submit">
-                  Search
-                </button>
-              </form>
+              <SearchComponent />
             </div>
           </div>
         </nav>
         <div className="container">
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/search" element={<Search />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
           </Routes>
