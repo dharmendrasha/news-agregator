@@ -67,23 +67,18 @@ function Auth() {
 
 
 export const SearchComponent = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const [query, setQuery] = useState(searchParams.get('q'))
-  const nav = useNavigate()
-
-  const searchQuery = (e) => {
-    e.preventDefault();
-    nav(`/search?q=${query}`)
-  }
-
+  
   return (
     <>
-      <form className="d-flex" onSubmit={searchQuery}>
+      <form className="d-flex" method='get' target='/search'>
         <input
           className="form-control me-2"
           type="search"
           value={query}
           required
+          name='q'
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search"
           aria-label="Search"
