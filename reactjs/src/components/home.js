@@ -2,10 +2,7 @@ import "../styles/home.css";
 import { useEffect, useState } from "react";
 import {getTopNewsApi} from '../utils/api-list'
 import { useRef } from "react";
-
-
-
-
+import Loader from "./loader";
 
 export default function Home() {
 
@@ -55,7 +52,7 @@ export default function Home() {
         <div className="h1 text-center text-dark" id="pageHeaderTitle">
           Top news list - {totalNews} - {results}
         </div>
-
+        {isLoading && <Loader />}
         {!isLoading &&
           Array.isArray(newsGet.articles) &&
           newsGet.articles.map((val, ind) => {
