@@ -31,7 +31,8 @@ function Auth() {
                 Logout
               </span>
             </li>
-          </ul>
+                </ul>
+                
         </nav>
         <Routes>
           <Route path="/" element={<Home />} />
