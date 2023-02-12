@@ -9,9 +9,7 @@ function Guest() {
       <>
         <nav className="navbar navbar-expand-sm navbar-dark bg-dark">
           <div className="container-fluid">
-            <a className="navbar-brand" href="#">
-              Logo
-            </a>
+            
             <button
               className="navbar-toggler"
               type="button"
