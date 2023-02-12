@@ -82,13 +82,13 @@ export const ArticleComponent = ({author, content, description, image, published
             </a>
           </h1>
           <div className="postcard__subtitle small">
-            <time dateTime="2020-05-25 12:00:00">
+            <time dateTime={publishedAt}>
               {new Date(publishedAt).toDateString()}
             </time>
           </div>
           <div className="postcard__bar"></div>
           <div className="postcard__preview-txt">{content}</div>
-          {author && (<>author : {author}</>)}
+          {author && <>author : {author}</>}
         </div>
       </article>
     </>
