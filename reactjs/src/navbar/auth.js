@@ -6,6 +6,7 @@ import Profile from "../components/profile";
 import Search from "../components/search";
 import { useState } from 'react';
 import { useNavigation, useSearchParams } from "react-router-dom";
+import { FilterModal } from '../components/FilterModel'
 
 
 function Auth() {
@@ -65,28 +66,39 @@ function Auth() {
     );
 }
 
-
 export const SearchComponent = () => {
   const [searchParams] = useSearchParams();
   const [query, setQuery] = useState(searchParams.get('q'))
+  const [modalShow, setModalShow] = useState(false);
   
   return (
     <>
-      <form className="d-flex" method='get' target='/search'>
+      <FilterModal show={modalShow} onHide={() => setModalShow(false)} />
+      <button
+        className="btn btn-outline-success"
+        type="button"
+        style={{ marginRight: "10px" }}
+        onClick={() => setModalShow(true)}
+      >
+        Filter
+      </button>
+      {/* <form className="d-flex" method="get" target="/search">
         <input
           className="form-control me-2"
           type="search"
           value={query}
           required
-          name='q'
+          name="q"
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search"
           aria-label="Search"
         />
+
+        <br />
         <button className="btn btn-outline-success" type="submit">
           Search
         </button>
-      </form>
+      </form> */}
     </>
   );
 }

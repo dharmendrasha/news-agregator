@@ -22,7 +22,24 @@ export default function Search() {
   const loadPage = (p = 1) => {
     setLoading(true);
     setPage(p)
-    return getNews({page: p, q: searchFor}).then((d) => {
+    const date = searchParams.get('date')
+    const category = searchParams.get("category");
+    const source = searchParams.get("source");
+    const lang = searchParams.get("lang");
+    const country = searchParams.get("country");
+    const searchPa = {
+      page: p,
+      q: searchFor,
+      date,
+      category,
+      source,
+      lang,
+      country,
+    };
+
+    console.log(searchFor)
+
+    return getNews(searchPa).then((d) => {
       if (d.articles.length === 0) {
         setIsEnd(true);
       }
@@ -71,12 +88,12 @@ export const ArticleComponent = ({author, content, description, image, published
   return (
     <>
       <article className="postcard light blue">
-        <a className="postcard__img_link" target="_blank" href={url}>
+        <a className="postcard__img_link" target="_blank" href={url} rel="noreferrer">
           <img className="postcard__img" src={image} alt="Image Title" />
         </a>
         <div className="postcard__text t-dark">
           <h1 className="postcard__title blue">
-            <a target="_blank" href={url}>
+            <a target="_blank" href={url} rel="noreferrer">
               {title}
             </a>
           </h1>
