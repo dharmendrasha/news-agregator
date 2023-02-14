@@ -1,11 +1,7 @@
-import "../styles/home.css";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from 'react';
 import {getTopNewsApi} from '../utils/api-list'
-import { useRef } from "react";
-
-
-
-
+import Loader from './loader'
+import '../styles/home.css';
 
 export default function Home() {
 
@@ -43,22 +39,23 @@ export default function Home() {
   }, [])
   
   return (
-    <section className="light">
-      <div className="container py-2" id="page_read_news" ref={ref}>
-        <div className="h1 text-center text-dark" id="pageHeaderTitle">
+    <section className='light'>
+      <div className='container py-2' id='page_read_news' ref={ref}>
+        <div className='h1 text-center text-dark' id='pageHeaderTitle'>
           Top News
         </div>
         {Array.isArray(articles) &&
           articles.map((val, ind) => {
             return <ArticleComponent key={ind} {...val} />;
           })}
+        {isLoading && <Loader />}
 
-        {!isEnd && (
+        {!isEnd && !isLoading && (
           <button
-            type="button"
+            type='button'
             disabled={isLoading}
             onClick={loadMore}
-            className="btn btn-primary left"
+            className='btn btn-primary left'
           >
             Load More...
           </button>
@@ -73,23 +70,23 @@ export default function Home() {
 export const ArticleComponent = ({author, content, description, image, publishedAt, source, title, url}) => {
   return (
     <>
-      <article className="postcard light blue">
-        <a className="postcard__img_link" target="_blank" href={url}>
-          <img className="postcard__img" src={image} alt="Image Title" />
+      <article className='postcard light blue'>
+        <a className='postcard__img_link' target='_blank' rel="noreferrer" href={url}>
+          <img className='postcard__img' src={image} alt='Image Title' />
         </a>
-        <div className="postcard__text t-dark">
-          <h1 className="postcard__title blue">
-            <a target="_blank" href={url}>
+        <div className='postcard__text t-dark'>
+          <h1 className='postcard__title blue'>
+            <a target='_blank' href={url} rel="noreferrer">
               {title}
             </a>
           </h1>
-          <div className="postcard__subtitle small">
+          <div className='postcard__subtitle small'>
             <time dateTime={publishedAt}>
               {new Date(publishedAt).toDateString()}
             </time>
           </div>
-          <div className="postcard__bar"></div>
-          <div className="postcard__preview-txt">{content}</div>
+          <div className='postcard__bar'></div>
+          <div className='postcard__preview-txt'>{content}</div>
           {author && <>Author : {author}</>}
           <br/>
           {source && source.source && <>Source : {source.source}</>}
