@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
-import "../styles/profile.css";
 import {
   getUserProfileApi,
   postUpdateProfileFeed,
   getAvailableNewsOptions,
 } from "../utils/api-list";
 import { md5 } from "../utils/crypto.util";
+import Loader from './loader'
+import "../styles/profile.css";
 
 
 export default function Profile() {
@@ -29,7 +30,7 @@ export default function Profile() {
     };
 
     if (isLoading) {
-     return <p>Loading</p>
+     return <Loader />
     }
 
    return (
@@ -54,6 +55,7 @@ export const PersonalizeFeed = ({
   const [language, setlanguage] = useState(default_language);
   const [country, setCountry] = useState(default_country);
   const [isLoading, setLoading] = useState(false);
+  const [isSaved, setSaved] = useState(false)
   const [availableSources, setAvailableSources] = useState([]);
   const [availableCategory, setAvailableCategory] = useState([]);
   const [availableLanguage, setAvailableLanguage] = useState([]);
@@ -79,6 +81,7 @@ export const PersonalizeFeed = ({
     postUpdateProfileFeed({ country, category, source, language })
       .then((v) => {
         setLoading(false);
+        setSaved(true);
       })
       .catch((e) => setLoading(false));
   };
@@ -86,7 +89,7 @@ export const PersonalizeFeed = ({
   return (
     <>
       <h5>Get Personalize news feed.</h5>
-      <form>
+      <form >
         <div class="form-group">
           <label for="inputSourced" class="col-sm-2 col-form-label">
             Source
@@ -103,15 +106,17 @@ export const PersonalizeFeed = ({
                   if (v.id === source) {
                     return (
                       <>
-                        <option selected value={v.id}>{v.name}</option>
+                        <option selected value={v.id}>
+                          {v.name}
+                        </option>
                       </>
                     );
                   }
-                    return (
-                      <>
-                        <option value={v.id}>{v.name}</option>
-                      </>
-                    );
+                  return (
+                    <>
+                      <option value={v.id}>{v.name}</option>
+                    </>
+                  );
                 })}
             </select>
           </div>
@@ -130,7 +135,11 @@ export const PersonalizeFeed = ({
               {Array.isArray(availableCategory) &&
                 availableCategory.map((v) => {
                   if (v === category) {
-                    return <option selected value={v}>{v}</option>;
+                    return (
+                      <option selected value={v}>
+                        {v}
+                      </option>
+                    );
                   }
                   return (
                     <>
@@ -155,13 +164,13 @@ export const PersonalizeFeed = ({
               <option selected>Please select language</option>
               {Array.isArray(availableLanguage) &&
                 availableLanguage.map((v) => {
-                   if (v === language) {
-                     return (
-                       <option selected value={v}>
-                         {v}
-                       </option>
-                     );
-                   }
+                  if (v === language) {
+                    return (
+                      <option selected value={v}>
+                        {v}
+                      </option>
+                    );
+                  }
                   return (
                     <>
                       <option value={v}>{v}</option>
@@ -211,6 +220,8 @@ export const PersonalizeFeed = ({
         >
           Update feed Settings
         </button>
+
+        {isSaved && <p>Settings has been successfully updated.</p>}
       </form>
     </>
   );
@@ -238,7 +249,7 @@ export const ProfileDetails = ({email, name, feed}) => {
               <span className="display-26 text-secondary me-2 font-weight-600">
                 Email:
               </span>{" "}
-              <a href={`mailto:${email}`}>{email}</a>
+              <a href={`mailto:${email}`}><span className="h4">{email}</span></a>
             </li>
           </ul>
           <PersonalizeFeed {...feed} />

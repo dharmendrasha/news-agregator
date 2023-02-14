@@ -20,7 +20,6 @@ export default function Login() {
             setLoading(false)
             alert("Unable to login please try with another email address.");
         })
-        
     }
 
     return(
@@ -39,9 +38,7 @@ export default function Login() {
                 <input type="password" className="form-control" placeholder="Enter password"
                     onChange={e => setPassword(e.target.value)}
                     id="pwd" />
-                </div>
-
-                
+                </div>                
 
                 <div className="d-grid">
                 <button type="submit" className="btn btn-primary" onClick={submitForm} disabled={isLoading}>

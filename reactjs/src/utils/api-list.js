@@ -48,3 +48,13 @@ export const getAvailableNewsOptions = async () => {
   return await tryCatch(async () => await api().get("available-news-options"));
 }
 
+export const getNews = async (data = {}) => {
+  console.log("data", data)
+  return await tryCatch(
+    async () =>
+      await api().get("news", {
+        params: { ...data },
+      })
+  );
+};
+
