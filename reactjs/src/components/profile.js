@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
-import "../styles/profile.css";
 import {
   getUserProfileApi,
   postUpdateProfileFeed,
   getAvailableNewsOptions,
 } from "../utils/api-list";
 import { md5 } from "../utils/crypto.util";
+import Loader from './loader'
+import "../styles/profile.css";
 
 
 export default function Profile() {
@@ -29,7 +30,7 @@ export default function Profile() {
     };
 
     if (isLoading) {
-     return <p>Loading</p>
+     return <Loader />
     }
 
    return (
@@ -88,7 +89,7 @@ export const PersonalizeFeed = ({
   return (
     <>
       <h5>Get Personalize news feed.</h5>
-      <form>
+      <form >
         <div class="form-group">
           <label for="inputSourced" class="col-sm-2 col-form-label">
             Source
@@ -248,7 +249,7 @@ export const ProfileDetails = ({email, name, feed}) => {
               <span className="display-26 text-secondary me-2 font-weight-600">
                 Email:
               </span>{" "}
-              <a href={`mailto:${email}`}>{email}</a>
+              <a href={`mailto:${email}`}><span className="h4">{email}</span></a>
             </li>
           </ul>
           <PersonalizeFeed {...feed} />
